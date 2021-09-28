@@ -33,8 +33,8 @@ export class Proto {
   messageIndex = new Map<string, MessageIndexMeta>();
 
   constructor(value: FileDescriptorProto.AsObject) {
-    this.name = value.name ? ? '';
-    this.pb_package = value.pb_package ? ? ''; // eslint-disable-line @typescript-eslint/camelcase
+    this.name = value.name ?? '';
+    this.pb_package = value.pb_package ?? ''; // eslint-disable-line @typescript-eslint/camelcase
     this.dependencyList = value.dependencyList || [];
     this.publicDependencyList = value.publicDependencyList;
     this.weakDependencyList = value.weakDependencyList;
@@ -42,7 +42,7 @@ export class Proto {
     this.enumTypeList = value.enumTypeList.map(e => new ProtoEnum(e as any));
     this.serviceList = value.serviceList.map(e => new ProtoService(e as any));
     this.extensionList = value.extensionList;
-    this.syntax = value.syntax ? ? '';
+    this.syntax = value.syntax ?? '';
 
     this.index();
   }
@@ -154,12 +154,12 @@ export class Proto {
     }).join('\n');
   }
 
-  getWktDependency(pb_package: string) {
-    if (pb_package === 'google.protobuf') {
+  getWktDependency(pbPackage: string) {
+    if (pbPackage === 'google.protobuf') {
       return '@ngx-grpc/well-known-types';
     }
-    if (!!Services.Config.customWellKnownTypes && !!Services.Config.customWellKnownTypes[pb_package]) {
-      return Services.Config.customWellKnownTypes[pb_package];
+    if (!!Services.Config.customWellKnownTypes && !!Services.Config.customWellKnownTypes[pbPackage]) {
+      return Services.Config.customWellKnownTypes[pbPackage];
     }
     return null;
   }
