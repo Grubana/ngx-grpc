@@ -1,9 +1,9 @@
-import { FileDescriptorProto } from 'google-protobuf/google/protobuf/descriptor_pb';
-import { Services } from '../services';
-import { dasherize } from '../utils';
-import { ProtoEnum } from './proto-enum';
-import { ProtoMessage } from './proto-message';
-import { ProtoService } from './proto-service';
+import {FileDescriptorProto} from 'google-protobuf/google/protobuf/descriptor_pb';
+import {Services} from '../services';
+import {dasherize} from '../utils';
+import {ProtoEnum} from './proto-enum';
+import {ProtoMessage} from './proto-message';
+import {ProtoService} from './proto-service';
 
 export interface MessageIndexMeta {
   proto: Proto;
@@ -33,8 +33,8 @@ export class Proto {
   messageIndex = new Map<string, MessageIndexMeta>();
 
   constructor(value: FileDescriptorProto.AsObject) {
-    this.name = value.name ?? '';
-    this.pb_package = value.pb_package ?? ''; // eslint-disable-line @typescript-eslint/camelcase
+    this.name = value.name ? ? '';
+    this.pb_package = value.pb_package ? ? ''; // eslint-disable-line @typescript-eslint/camelcase
     this.dependencyList = value.dependencyList || [];
     this.publicDependencyList = value.publicDependencyList;
     this.weakDependencyList = value.weakDependencyList;
@@ -42,7 +42,7 @@ export class Proto {
     this.enumTypeList = value.enumTypeList.map(e => new ProtoEnum(e as any));
     this.serviceList = value.serviceList.map(e => new ProtoService(e as any));
     this.extensionList = value.extensionList;
-    this.syntax = value.syntax ?? '';
+    this.syntax = value.syntax ? ? '';
 
     this.index();
   }
@@ -50,7 +50,7 @@ export class Proto {
   private index() {
     const indexEnums = (path: string, enums: ProtoEnum[]) => {
       enums.forEach(oneEnum => {
-        this.messageIndex.set(path + '.' + oneEnum.name, { proto: this, enum: oneEnum });
+        this.messageIndex.set(path + '.' + oneEnum.name, {proto: this, enum: oneEnum});
       });
     };
 
@@ -145,13 +145,25 @@ export class Proto {
     const root = Array(this.name.split('/').length - 1).fill('..').join('/');
 
     return this.resolved.allDependencies.map(pp => {
-      const isWKT = pp.pb_package === 'google.protobuf';
+      const wktDependency = this.getWktDependency(pp.pb_package);
+      const isWKT = wktDependency != null;
       const genwkt = Services.Config.embedWellKnownTypes;
-      const path = (genwkt || !genwkt && !isWKT) ? `${root || '.'}/${pp.getGeneratedFileBaseName()}` : '@ngx-grpc/well-known-types';
+      const path = (genwkt || !genwkt && !isWKT) ? `${root || '.'}/${pp.getGeneratedFileBaseName()}` : wktDependency;
 
       return `import * as ${this.getDependencyPackageName(pp)} from '${path}';`;
     }).join('\n');
   }
+
+  getWktDependency(pb_package: string) {
+    if (pb_package === 'google.protobuf') {
+      return '@ngx-grpc/well-known-types';
+    }
+    if (!!Services.Config.customWellKnownTypes && !!Services.Config.customWellKnownTypes[pb_package]) {
+      return Services.Config.customWellKnownTypes[pb_package];
+    }
+    return null;
+  }
+
 
   getGeneratedFileBaseName() {
     return `${dasherize(this.name.replace(/\.proto$/, ''))}.pb`;
