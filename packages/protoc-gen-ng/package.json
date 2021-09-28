@@ -1,5 +1,5 @@
 {
-  "name": "@ngx-grpc/protoc-gen-ng",
+  "name": "@getsystems/protoc-gen-ng",
   "description": "gRPC code generator for Angular",
   "author": "smnbbrv",
   "license": "MIT",
