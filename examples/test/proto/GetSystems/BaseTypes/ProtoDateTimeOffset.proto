@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package getsystems.basetypes;
+
+option csharp_namespace = "GetSystems.Grpc.BaseTypes";
+
+option java_multiple_files = true;
+option java_package = "getsystems.proto.basetypes";
+option java_outer_classname = "DateTimeOffsetPack";
+
+message ProtoDateTimeOffset {
+	//try read this first
+	//always send this!
+	string iso_value = 3;
+
+	//old devices! -> try read second
+	//web need's to send this always
+	int64 utcTimestampMilliseconds = 1 [deprecated = true];
+	int32 timeZoneMinutes = 2 [deprecated = true];
+}

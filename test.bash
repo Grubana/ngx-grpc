@@ -1,0 +1,1 @@
+node C:/nifdex/tfs/ngx-grpc/dist/protoc-gen-ng/main.js | sed 1,Xd

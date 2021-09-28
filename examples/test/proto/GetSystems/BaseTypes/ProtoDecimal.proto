@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package getsystems.basetypes;
+
+option csharp_namespace = "GetSystems.Grpc.BaseTypes";
+
+option java_multiple_files = true;
+option java_package = "getsystems.proto.basetypes";
+option java_outer_classname = "BigDecimalPack";
+
+message ProtoDecimal {
+	string value = 1;
+}

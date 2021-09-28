@@ -1,0 +1,156 @@
+syntax = "proto3";
+
+import "GetSystems/BaseTypes/ProtoGuid.proto";
+import "GetSystems/BaseTypes/ProtoDateTimeOffset.proto";
+import "google/protobuf/any.proto";
+
+package getsystems.businesslogin;
+
+option csharp_namespace = "GetSystems.Grpc.Services.BusinessLogin";
+
+service BusinessLoginService {
+	rpc CreateOrUpdateBusinessLogin (CreateOrUpdateBusinessLoginRequest) returns (CreateOrUpdateBusinessLoginResponse);
+	rpc DeleteBusinessLogin (DeleteBusinessLoginRequest) returns (DeleteBusinessLoginResponse);
+	rpc GetBusinessLoginRoles (GetBusinessLoginRolesRequest) returns (GetBusinessLoginRolesResponse);
+	rpc LockoutBusinessLogin (LockoutBusinessLoginRequest) returns (LockoutBusinessLoginResponse);
+	rpc ResetBusinessLoginPassword (ResetBusinessLoginPasswordRequest) returns (ResetBusinessLoginPasswordResponse);
+	rpc GetBusinessLoginByEmail (GetBusinessLoginByEmailRequest) returns (GetBusinessLoginByEmailResponse);
+	rpc GetBusinessLoginById (GetBusinessLoginByIdRequest) returns (GetBusinessLoginByIdResponse);
+	rpc GetBusinessLogins (GetBusinessLoginsRequest) returns (GetBusinessLoginsResponse);
+	rpc SetBusinessLoginPassword (SetBusinessLoginPasswordRequest) returns (SetBusinessLoginPasswordResponse);
+}
+
+message CreateOrUpdateBusinessLoginRequest {
+	basetypes.ProtoGuid id = 1;
+	string email = 2;
+	string user_name = 3;
+	string given_name = 4;
+	string family_name = 5;
+	string nick_name = 6;
+	string phone_number = 7;
+	bool email_confirmed = 8;
+	bool phone_number_confirmed = 9;
+	bool two_factor_enabled = 10;
+	bool lockout_enabled = 11;
+	basetypes.ProtoDateTimeOffset lockout_end = 12;
+	repeated BusinessLoginRole roles = 13;
+	repeated BusinessLoginClaim claims = 14;
+	string password = 15;
+	google.protobuf.Any ida = 16;
+}
+
+message CreateOrUpdateBusinessLoginResponse {
+}
+
+message DeleteBusinessLoginRequest {
+	basetypes.ProtoGuid id = 1;
+}
+
+message DeleteBusinessLoginResponse {
+}
+
+message GetBusinessLoginRolesRequest {
+}
+
+message GetBusinessLoginRolesResponse {
+	repeated BusinessLoginRole roles = 1;
+}
+
+message LockoutBusinessLoginRequest {
+	basetypes.ProtoGuid id = 1;
+	basetypes.ProtoDateTimeOffset lockout_end = 2;
+}
+
+message LockoutBusinessLoginResponse {
+}
+
+message GetBusinessLoginByIdRequest {
+	basetypes.ProtoGuid id = 1;
+}
+
+message GetBusinessLoginByIdResponse {
+	BusinessLogin user = 1;
+}
+
+message GetBusinessLoginByEmailRequest {
+	string email = 1;
+}
+
+message GetBusinessLoginByEmailResponse {
+	BusinessLogin user = 1;
+}
+
+message GetBusinessLoginsRequest {
+	repeated BusinessLoginFilter filters = 1;
+	repeated BusinessLoginRole roles = 2;
+	int32 top = 3;
+	int32 skip = 4;
+}
+
+message GetBusinessLoginsResponse {
+	repeated BusinessLogin business_logins = 1;
+	int32 inlineCount = 2;
+}
+
+message SetBusinessLoginPasswordRequest {
+	basetypes.ProtoGuid id = 1;
+	string password = 2;
+}
+
+message SetBusinessLoginPasswordResponse {
+}
+
+message ResetBusinessLoginPasswordRequest {
+	basetypes.ProtoGuid mail_id = 1;
+	string email = 2;
+}
+
+message ResetBusinessLoginPasswordResponse {
+}
+
+message BusinessLogin {
+	basetypes.ProtoGuid id = 1;
+	string email = 2;
+	string user_name = 3;
+	string given_name = 4;
+	string family_name = 5;
+	string nick_name = 6;
+	string phone_number = 7;
+	bool email_confirmed = 8;
+	bool phone_number_confirmed = 9;
+	bool two_factor_enabled = 10;
+	bool lockout_enabled = 11;
+	basetypes.ProtoDateTimeOffset lockout_end = 12;
+	repeated BusinessLoginRole roles = 13;
+	repeated BusinessLoginClaim claims = 14;
+}
+
+message BusinessLoginClaim {
+	string type = 1;
+	string value = 2;
+}
+
+message BusinessLoginRole {
+	string name = 1;
+}
+
+message BusinessLoginFilter {
+	string property_name = 1;
+	BusinessLoginFilterOp operation = 2;
+	oneof value {
+		string string_value = 3;
+		bool bool_value = 4;
+	}
+}
+
+enum BusinessLoginFilterOp {
+	BUSINESS_LOGIN_FILTER_OP_UNSPECIFIED = 0; //From the style guides: The zero value enum should have the suffix UNSPECIFIED. 
+	BUSINESS_LOGIN_FILTER_OP_EQUALS = 1;
+	BUSINESS_LOGIN_FILTER_OP_GREATER_THAN = 2;
+	BUSINESS_LOGIN_FILTER_OP_LESS_THAN = 3;
+	BUSINESS_LOGIN_FILTER_OP_GREATER_THAN_OR_EQUAL = 4;
+	BUSINESS_LOGIN_FILTER_OP_LESS_THAN_OR_EQUAL = 5;
+	BUSINESS_LOGIN_FILTER_OP_CONTAINS = 6;
+	BUSINESS_LOGIN_FILTER_OP_STARTS_WITH = 7;
+	BUSINESS_LOGIN_FILTER_OP_ENDS_WITH = 8;
+}
