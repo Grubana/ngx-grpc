@@ -155,6 +155,7 @@ export class Proto {
   }
 
   getWktDependency(pbPackage: string) {
+    console.log(pbPackage)
     if (pbPackage === 'google.protobuf') {
       return '@ngx-grpc/well-known-types';
     }
