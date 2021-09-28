@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package getsystems.basetypes;
+
+option csharp_namespace = "GetSystems.Grpc.BaseTypes";
+
+option java_package = "getsystems.proto.basetypes";
+option java_multiple_files = true;
+option java_outer_classname = "GuidPack";
+
+message ProtoGuid {
+	//try read this first
+	//always send this!
+	string string_value = 2;
+
+	//old devices! -> try read second
+	//web need's to send this always
+	bytes value = 1 [deprecated = true];
+}

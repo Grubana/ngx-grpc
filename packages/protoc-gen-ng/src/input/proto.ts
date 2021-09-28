@@ -1,9 +1,9 @@
-import { FileDescriptorProto } from 'google-protobuf/google/protobuf/descriptor_pb';
-import { Services } from '../services';
-import { dasherize } from '../utils';
-import { ProtoEnum } from './proto-enum';
-import { ProtoMessage } from './proto-message';
-import { ProtoService } from './proto-service';
+import {FileDescriptorProto} from 'google-protobuf/google/protobuf/descriptor_pb';
+import {Services} from '../services';
+import {dasherize} from '../utils';
+import {ProtoEnum} from './proto-enum';
+import {ProtoMessage} from './proto-message';
+import {ProtoService} from './proto-service';
 
 export interface MessageIndexMeta {
   proto: Proto;
@@ -50,7 +50,7 @@ export class Proto {
   private index() {
     const indexEnums = (path: string, enums: ProtoEnum[]) => {
       enums.forEach(oneEnum => {
-        this.messageIndex.set(path + '.' + oneEnum.name, { proto: this, enum: oneEnum });
+        this.messageIndex.set(path + '.' + oneEnum.name, {proto: this, enum: oneEnum});
       });
     };
 
@@ -145,13 +145,25 @@ export class Proto {
     const root = Array(this.name.split('/').length - 1).fill('..').join('/');
 
     return this.resolved.allDependencies.map(pp => {
-      const isWKT = pp.pb_package === 'google.protobuf';
+      const wktDependency = this.getWktDependency(pp.pb_package);
+      const isWKT = wktDependency != null;
       const genwkt = Services.Config.embedWellKnownTypes;
-      const path = (genwkt || !genwkt && !isWKT) ? `${root || '.'}/${pp.getGeneratedFileBaseName()}` : '@ngx-grpc/well-known-types';
+      const path = (genwkt || !genwkt && !isWKT) ? `${root || '.'}/${pp.getGeneratedFileBaseName()}` : wktDependency;
 
       return `import * as ${this.getDependencyPackageName(pp)} from '${path}';`;
     }).join('\n');
   }
+
+  getWktDependency(pbPackage: string) {
+    if (pbPackage === 'google.protobuf') {
+      return '@ngx-grpc/well-known-types';
+    }
+    if (!!Services.Config.customWellKnownTypes && !!Services.Config.customWellKnownTypes[pbPackage]) {
+      return Services.Config.customWellKnownTypes[pbPackage];
+    }
+    return null;
+  }
+
 
   getGeneratedFileBaseName() {
     return `${dasherize(this.name.replace(/\.proto$/, ''))}.pb`;

@@ -15,7 +15,6 @@
     "build:lib:protoc-gen-ng": "cd packages/protoc-gen-ng && rimraf ../../dist/protoc-gen-ng && tsc -p tsconfig.build.json && chmod +x ../../dist/protoc-gen-ng/main.js && cpy package.json ../../dist/protoc-gen-ng/ && cpy ../../LICENSE.md ../../dist/protoc-gen-ng/ && cpy README.md ../../dist/protoc-gen-ng/",
     "build:lib:well-known-types": "ng build well-known-types --prod && cpy LICENSE.md dist/well-known-types/",
     "build:lib:well-known-types:generate": "rimraf packages/well-known-types/src/lib/* && $(pwd)/node_modules/.bin/grpc_tools_node_protoc --plugin=protoc-gen-ng=$(pwd)/dist/protoc-gen-ng/main.js --ng_out=config=packages/well-known-types/ngx-grpc.conf.js:./packages/well-known-types/src/lib packages/well-known-types/generate.proto && rimraf packages/well-known-types/src/lib/packages",
-    "test": "run-s test:lib:protoc-gen-ng",
     "test:lib": "run-s test:lib:common test:lib:core test:lib:worker test:lib:worker-client test:lib:protoc-gen-ng",
     "test:lib:common": "ng test common --watch=false --progress=false --browsers=ChromeHeadlessCI --code-coverage",
     "test:lib:core": "ng test core --watch=false --progress=false --browsers=ChromeHeadlessCI --code-coverage",
@@ -33,7 +32,9 @@
     "examples:backend": "docker-compose -f examples/backend/docker-compose.yaml down && docker-compose -f examples/backend/docker-compose.yaml up --remove-orphans --build",
     "examples:backend:no-proxy": "cd examples/backend && npm start",
     "examples:proto:generate": "run-s examples:proto:generate-backend examples:proto:generate-basic",
-    "examples:proto:generate-basic": "mkdir -p examples/basic-example/src/proto && rm -rf examples/basic-example/src/proto/* && $(pwd)/node_modules/.bin/grpc_tools_node_protoc --plugin=protoc-gen-ng=$(pwd)/dist/protoc-gen-ng/main.js --ng_out=config=examples/basic-example/ngx-grpc.conf.js:examples/basic-example/src/proto -I examples/proto $(find examples/proto -iname \"*.proto\")",
+    "examples:proto:generate-basic": "$(pwd)/node_modules/.bin/grpc_tools_node_protoc --plugin=protoc-gen-ng=$(pwd)/dist/protoc-gen-ng/main.js --ng_out=config=examples/basic-example/ngx-grpc.conf.js:examples/basic-example/src/proto -I examples/proto $(find examples/proto -iname \"*.proto\")",
+    "examples:proto:test": "./node_modules/.bin/grpc_tools_node_protoc --plugin=protoc-gen-ng=$(pwd)/dist/protoc-gen-ng/main.js --ng_out=config=examples/test/ngx-grpc.conf.js:$(pwd)/examples/test -I $(pwd)/examples/test/proto BusinessLoginService.proto",
+    "test": "npm run build:lib:protoc-gen-ng && npm run examples:proto:test",
     "examples:proto:generate-backend": "cd examples/backend && npm run proto:generate"
   },
   "dependencies": {
