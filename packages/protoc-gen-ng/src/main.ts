@@ -54,7 +54,7 @@ async function main() {
     protos
       .filter(p => genwkt || !genwkt && (p.pb_package !== 'google.protobuf' || (!!Services.Config.customWellKnownTypes && !!Services.Config.customWellKnownTypes[p.pb_package])))
       .forEach(proto => {
-        Services.Logger.debug(`Start processing proto file ${proto.name}`);
+        Services.Logger.debug(`Start processing proto ${proto.name}`);
 
         const basename = proto.getGeneratedFileBaseName();
         const files: any[] = [];
