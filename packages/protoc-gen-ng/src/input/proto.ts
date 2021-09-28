@@ -163,7 +163,7 @@ export class Proto {
     }
     return null;
   }
-  
+
   getGeneratedFileBaseName() {
     return `${dasherize(this.name.replace(/\.proto$/, ''))}.pb`;
   }
