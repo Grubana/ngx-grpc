@@ -1,3 +1,10 @@
+# [2.5.0](https://github.com/Grubana/ngx-grpc/compare/v2.4.0...v2.5.0) (2021-09-28)
+
+
+### Features
+
+* **protoc-gen-ng:** add support for custom WKT ([8a64bde](https://github.com/Grubana/ngx-grpc/commit/8a64bde5b0c5d6932784db36552618ec76edb523))
+
 # [2.4.0](https://github.com/Grubana/ngx-grpc/compare/v2.3.0...v2.4.0) (2021-09-28)
 
 
