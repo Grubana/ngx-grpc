@@ -1,3 +1,10 @@
+# [2.6.0](https://github.com/Grubana/ngx-grpc/compare/v2.5.0...v2.6.0) (2021-09-29)
+
+
+### Features
+
+* **protoc-gen-ng:** old typescript compability ([d30d9a0](https://github.com/Grubana/ngx-grpc/commit/d30d9a06928e9e7b60ddc92a0e987b612442d3b1))
+
 # [2.5.0](https://github.com/Grubana/ngx-grpc/compare/v2.4.0...v2.5.0) (2021-09-28)
 
 
